@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Nav from './views/Nav';
 import Todo from './views/Todo';
 
@@ -18,6 +18,16 @@ const App = () => {
     { id: 'todo5', title: 'Learn React', type: 'Jason' }, 
   ]);
 
+  /**************************************************************************
+  *  + []: array dependency 
+  *  + Khi sử dụng hàm useEffect() có [] phía cuối là == componentDidMount()
+  *  + Hàm useEffect() được sử dùng nhiều lần và chứa các state khác nhau
+  ***************************************************************************/ 
+  useEffect(() => {
+    console.log('>>>> Run use effect');
+  }, [content]) // [] array dependency
+
+  // Function Add New Todo
   const handleAddNewTodo = (e) => {
     // HOOK NOT MERGE STATE
     // Spread Operator ...
@@ -25,14 +35,31 @@ const App = () => {
       alert('Title is required !')
       return;
     }
-    let newTodo = { id: '', title: content, type: 'Jason' }
+    let newTodo = { 
+      id: Math.floor((Math.random() * 100000) + 1), 
+      title: content, 
+      type: 'Jason' 
+    }
     setTodos([...todos, newTodo]) // Cộng gộp state mới và state cũ
     setContent('');
   }
 
+  // Function Get Data On Change Input
   const handleOnChangeInput = (e) => {
     setContent(e.target.value)
     // console.log(e.target.value);
+  }
+
+  // Function Delete Todo
+  const deleteDataTodo = (id) => {
+    // Không thể dùng biến todos trực tiếp vì ở trên khai const thì sẽ phát sinh lỗi 
+    // [ Assignment to constant variable.]
+    // todos = todos.filter(item => item.id !== id);
+
+    // Dùng cách gián tiếp
+    let currentTodo = todos;
+    currentTodo = currentTodo.filter(item => item.id !== id);
+    setTodos(currentTodo);
   }
 
   return (
@@ -58,9 +85,12 @@ const App = () => {
           </div>
           <Todo todos={todos}
                 title={'All Todo'}
+                deleteDataTodo={deleteDataTodo}
           />
+          {/** Reusing Component By Filter Data **/}
           <Todo todos={todos.filter(todo => todo.type === 'Jason')}
                 title={`Jason's Todo`}
+                deleteDataTodo={deleteDataTodo}
           />
         </div>
       </header>

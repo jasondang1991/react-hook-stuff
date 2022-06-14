@@ -1,17 +1,21 @@
 const Todo = (props) => {
-    const todos = props.todos
-    console.log('>>> Check props: ', props);
+    
+    const{ todos, title, deleteDataTodo} = props
+    // console.log('>>> Check props: ', props);
+    const handleDeleteTodo = (id) => {
+        deleteDataTodo(id);
+    }
     return (
         <div className='row justify-content-center py-5'>
             <div className="title">
-                {props.title}
+                {title}
             </div>
             <hr/>
             {todos.map(todo => {
                 return (
                     <div className="col-7" key={todo.id}>        
                         <div className="todo-item text-center">
-                            {todo.title} - <span><button className='btn btn-sm btn-danger'>X</button></span>
+                            {todo.title} - <span><button className='btn btn-sm text-white bg-gradient bg-danger' onClick={() => handleDeleteTodo(todo.id)}>Delete</button></span>
                         </div>
                     </div>
                 )
