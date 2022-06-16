@@ -3,6 +3,7 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import Nav from './views/Nav';
 import Todo from './views/Todo';
+import Covid from './views/Covid';
 
 const App = () => {
 
@@ -25,7 +26,7 @@ const App = () => {
   ***************************************************************************/ 
   useEffect(() => {
     console.log('>>>> Run use effect');
-  }, [content]) // [] array dependency
+  }, []) // [] array dependency
 
   // Function Add New Todo
   const handleAddNewTodo = (e) => {
@@ -93,6 +94,7 @@ const App = () => {
                 deleteDataTodo={deleteDataTodo}
           />
         </div>
+        <Covid/>
       </header>
     </div>
   );
