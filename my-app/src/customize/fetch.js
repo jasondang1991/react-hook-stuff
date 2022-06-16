@@ -16,32 +16,48 @@ const useFetch = (url) => {
 
     // + Bằng với componentDidMount
     useEffect(() => {
-        try {
-            async function fetchData() {
-                setTimeout(async () => {
-                    let res = await axios.get(url);
-                    let data = res && res.data ? res.data : []; // Check Data 
-                    // Check Data and Convert Format Date Befor Set State
-                    if (data && data.length > 0) {
-                        data.map(item => {
-                            item.Date = moment(item.Date).format('DD/MM/YYYY')
-                            return item;
-                        })
-                        data = data.reverse();
-                    }
-                    setData(data);
+        
+        const ourRequest = axios.CancelToken.source() // <-- 1st step
+
+        async function fetchData() {
+            try {
+                let res = await axios.get(url, {
+                    cancelToken: ourRequest.token, // <-- 2nd step
+                });
+                let data = res && res.data ? res.data : []; // Check Data 
+                // Check Data and Convert Format Date Before Set State
+                if (data && data.length > 0) {
+                    data.map(item => {
+                        item.Date = moment(item.Date).format('DD/MM/YYYY')
+                        return item;
+                    })
+                    data = data.reverse();
+                }
+                setData(data);
+                setIsLoading(false);
+                setIsError(false)
+                // console.log(data);
+
+            } catch (err) {
+                if (axios.isCancel(err)) {
+                    console.log('Request canceled', err.message);
+                } else {
+                    setIsError(true);
                     setIsLoading(false);
-                    setIsError(false)
-                    // console.log(data);
-                }, 5000);
+                }
             }
-            fetchData()
-        } catch (e) {
-            setIsError(true);
-            setIsLoading(false);
-        }   
+        }
+        setTimeout(() => {
+            fetchData();
+        }, 3000);
+
+        return () => {
+            ourRequest.cancel('Operation canceled by the user.') // <-- 3rd step
+        }
+
     }, [url]);
 
+    // Trả data về
     return {
         data, isLoading, isError
     }

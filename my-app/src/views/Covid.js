@@ -5,6 +5,7 @@ import useFetch from '../customize/fetch';
 const Covid = () => {
 
     const API = 'https://api.covid19api.com/country/vietnam?from=2021-10-01T00%3A00%3A00Z&to=2021-10-20T00%3A00%3A00Z';
+    // data là state data từ bên Custom Hook useFetch()
     const {data: dataCovid, isError , isLoading} = useFetch(API); // API là Url dùng chung.
 
     return (
@@ -41,14 +42,14 @@ const Covid = () => {
                                 })
                             }
                             {isLoading === true &&
-                                <td colspan="5">
+                                <td colSpan="5">
                                     <div className="spinner-grow text-light mt-3" role="status">
                                         <span className="visually-hidden">Loading...</span>
                                     </div>
                                 </td>    
                             }
                             {isError === true &&
-                                <td colspan="5">
+                                <td colSpan="5">
                                     <h5>Something wrong .... !</h5>
                                 </td>    
                             }
